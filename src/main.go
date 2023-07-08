@@ -1,13 +1,9 @@
 package main
 
-import "github.com/gofiber/fiber/v2"
+import (
+    "github.com/williamroberttv/curriculum-gen-api/src/setup"
+)
 
 func main() {
-    app := fiber.New()
-
-    app.Get("/", func(c *fiber.Ctx) error {
-        return c.SendString("Hello, World! AIRAS@2")
-    })
-
-    app.Listen(":3000")
+    setup.SetupAndRunApp()
 }
