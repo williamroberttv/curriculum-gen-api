@@ -9,6 +9,8 @@ services:
       - "3000:3000"
     volumes:
       - .:/usr/src/app
+    networks:
+      - development
     command: air -c .air.toml
     depends_on:
       - db
@@ -23,7 +25,12 @@ services:
       - "5432:5432"
     volumes:
       - postgres-db:/var/lib/postgresql/data
+    networks:
+      - development
 
+networks:
+  development:
+    driver: bridge
 volumes:
   postgres-db:
     external: false
