@@ -1,26 +1,39 @@
 package database
 
 import (
-	"fmt"
-	"database/sql"
-	
-	_ "github.com/lib/pq"
+	"github.com/williamroberttv/curriculum-gen-api/src/models"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-func Connect(user, password, dbname string) {
-	//get the connection string url
-	fmt.Println("Connecting to database...")
-	dbinfo := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable",
-            user, password, dbname)
-	// Connect to the database.
-	db, err := sql.Open("postgres", dbinfo)
-	checkErr(err)
-  defer db.Close()
-	fmt.Println("Successfully connected to database!")
+var DB *gorm.DB
+
+type Database struct {
+	Db *gorm.DB
+	Dsn string
+	DbType string
+	AutoMigrateDb bool
 }
 
-func checkErr(err error) {
+func NewDb() *Database {
+	return &Database{}
+}
+
+func (d *Database) Connect() (*gorm.DB, error) {
+	var err error
+
+	d.Db, err = gorm.Open(postgres.Open(d.Dsn), &gorm.Config{})
 	if err != nil {
-			panic(err)
+		return nil, err
 	}
+
+	if d.AutoMigrateDb {
+		err = d.Db.AutoMigrate(&models.User{})
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	DB = d.Db
+	return d.Db, nil
 }
