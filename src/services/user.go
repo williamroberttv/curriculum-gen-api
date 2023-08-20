@@ -55,3 +55,16 @@ func GetUser(c *fiber.Ctx) error {
 	return c.Status(200).JSON(user)
 
 }
+
+func GetUserByEmail(c *fiber.Ctx) error {
+	email := c.Params("email");
+	
+	userRepo := repositories.NewUserRepositoryDb(database.DB)
+	user, err := userRepo.FindUserByEmail(email)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+	return c.Status(200).JSON(user)
+}

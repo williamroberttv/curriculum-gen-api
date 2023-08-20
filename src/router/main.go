@@ -8,13 +8,13 @@ import (
 
 func SetupRoutes(app *fiber.App) {
 
-	// setup the auth group
-	// auth := app.Group("/auth")
-	// auth.Get("/", services.Authenticate)
-
 	//setup the user group
 	user := app.Group("/user")
 	user.Get("/:id", services.GetUser)
 	user.Post("/", services.CreateUser)
-	user.Post("/post", services.CreateUser)
+
+	// setup theauth group
+	auth := app.Group("/auth")
+	auth.Post("/", services.Authenticate)
+	auth.Get("/", services.RefreshToken)
 }

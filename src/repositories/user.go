@@ -30,7 +30,7 @@ func (repo *UserRepositoryDb) Init(db *gorm.DB) {
 
 func (repo UserRepositoryDb) Insert(user *models.User) (*models.User, error) {
 	user.BeforeCreate(repo.Db)
-
+	fmt.Println("user",user)
 	err := repo.Db.Create(user).Error
 
 	if err != nil {

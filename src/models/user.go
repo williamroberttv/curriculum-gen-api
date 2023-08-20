@@ -41,13 +41,23 @@ func (user *User) Validate() error {
 }
 
 func (user *User) BeforeCreate(tx *gorm.DB) (err error) {
-	user.ID = uuid.NewV4().String()
-	user.CreatedAt = time.Now()
-	user.UpdatedAt = time.Now()
-	hashedPass, err := utils.HashPassword(user.Password)
-	if err != nil {
-		return err
-	}
-	user.Password = string(hashedPass)
-	return
+	if user.ID == "" {
+		user.ID = uuid.NewV4().String()
+}
+if user.CreatedAt.IsZero() {
+		user.CreatedAt = time.Now()
+}
+if user.UpdatedAt.IsZero() {
+		user.UpdatedAt = time.Now()
+}
+
+if len(user.Password) > 0 && user.Password[0] != '$' {
+		hashedPass, err := utils.HashPassword(string(user.Password))
+		if err != nil {
+				return err
+		}
+		user.Password = string(hashedPass)
+}
+
+return nil
 }

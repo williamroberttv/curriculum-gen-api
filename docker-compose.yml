@@ -6,7 +6,7 @@ services:
     env_file:
       - .env
     ports:
-      - "3000:3000"
+      - "${PORT}:${PORT}"
     volumes:
       - .:/usr/src/app
     networks:
@@ -17,6 +17,7 @@ services:
 
   db:
     image: postgres:alpine
+    container_name: postgres-db
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
